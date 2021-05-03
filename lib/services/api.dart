@@ -48,7 +48,7 @@ class API {
               rawMovie.split(ratingSplitStart)[1].split(ratingSplitEnd)[0];
           rating = double.parse(ratingString.split("based")[0]);
         }
-        print(title);
+
         yield Movie(title, image, year, rating);
       }
     }

@@ -1,12 +1,12 @@
 class Movie {
-  String _name;
+  String _title;
   String _image;
   int _year;
   double? _rating;
 
-  Movie(this._name, this._image, this._year, this._rating);
+  Movie(this._title, this._image, this._year, this._rating);
 
-  String get name => this._name;
+  String get title => this._title;
 
   String get image => this._image;
 

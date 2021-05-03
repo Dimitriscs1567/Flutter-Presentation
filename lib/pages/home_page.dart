@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_presentation/models/movie.dart';
 import 'package:flutter_presentation/services/api.dart';
+import 'package:flutter_presentation/widgets/movie_widget.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -17,7 +18,7 @@ class _HomePageState extends State<HomePage> {
         title: Text("Most Popular Movies"),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        padding: const EdgeInsets.all(10.0),
         child: StreamBuilder(
           stream: API.getPopularMovies(),
           builder: (context, snapshot) {
@@ -29,13 +30,14 @@ class _HomePageState extends State<HomePage> {
               return GridView.extent(
                 maxCrossAxisExtent: 300.0,
                 crossAxisSpacing: 30.0,
-                childAspectRatio: 0.6,
+                mainAxisSpacing: 30.0,
+                childAspectRatio: 0.7,
                 children: movies
-                    .map((movie) => Image.network(
-                          movie.image,
-                          width: 350.0,
-                          fit: BoxFit.contain,
-                        ))
+                    .map(
+                      (movie) => MovieWidget(
+                        movie: movie,
+                      ),
+                    )
                     .toList(),
               );
             } else {
