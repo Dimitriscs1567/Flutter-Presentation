@@ -9,9 +9,11 @@ class API {
     String yearSplitStart = '<span class="secondaryInfo">(';
     String yearSplitEnd = ')</span>';
     String imageSplitStart = '<div class="poster">';
-    String imageSplitEnd = '" width';
+    String plotSplitStart = '<h2>Storyline</h2>';
     String ratingSplitStart = '<strong title="';
     String ratingSplitEnd = '">';
+    String durationSplitStart = '<time datetime=';
+    String categoriesSplitStart = 'title="See more release dates"';
 
     var response = await http.get(
         Uri.parse("https://www.imdb.com/chart/moviemeter/?ref_=nv_mv_mpm"));
@@ -21,18 +23,48 @@ class API {
 
     for (String rawMovie in rawMovies) {
       if (rawMovie.contains(titleSplitStart)) {
-        String imageRequest = rawMovie
+        String moreInfoRequest = rawMovie
             .split(titleSplitStart)[1]
             .split('<a href="')[1]
             .split('"')[0];
 
-        var imageResponse =
-            await http.get(Uri.parse("https://www.imdb.com$imageRequest"));
+        var moreInfoResponse =
+            await http.get(Uri.parse("https://www.imdb.com$moreInfoRequest"));
 
-        String image = imageResponse.body
+        String image = moreInfoResponse.body
             .split(imageSplitStart)[1]
             .split('src="')[1]
             .split('"')[0];
+
+        String plot = moreInfoResponse.body
+            .split(plotSplitStart)[1]
+            .split("<span>")[1]
+            .split("</span>")[0]
+            .trim();
+
+        String? duration;
+        if (moreInfoResponse.body.contains(durationSplitStart)) {
+          duration = moreInfoResponse.body
+              .split(durationSplitStart)[1]
+              .split('">')[1]
+              .split("</time>")[0]
+              .trim();
+        }
+
+        String allCategories = moreInfoResponse.body
+            .split('<div class="title_wrapper">')[1]
+            .split('<div class="subtext">')[1]
+            .split(categoriesSplitStart)[0];
+
+        List<String> categories = [];
+        allCategories.split("\n<a href=\"").forEach((rawCategory) {
+          if (rawCategory.contains(">")) {
+            String category = rawCategory.split('>')[1].split("</a")[0];
+            if (!category.contains("</span") && !category.contains("</time")) {
+              categories.add(category);
+            }
+          }
+        });
 
         String title = rawMovie
             .split(titleSplitStart)[1]
@@ -49,7 +81,7 @@ class API {
           rating = double.parse(ratingString.split("based")[0]);
         }
 
-        yield Movie(title, image, year, rating);
+        yield Movie(title, image, plot, duration, categories, year, rating);
       }
     }
   }

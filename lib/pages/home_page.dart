@@ -16,6 +16,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Most Popular Movies"),
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.all(10.0),

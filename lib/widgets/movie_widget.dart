@@ -43,7 +43,7 @@ class _MovieWidgetState extends State<MovieWidget> {
               width: 300.0,
               height: showContainer ? (300 / 0.6) / 4 : 0.0,
               color: Colors.black.withOpacity(0.6),
-              duration: Duration(milliseconds: 800),
+              duration: Duration(milliseconds: 500),
               curve: Curves.fastOutSlowIn,
               onEnd: () {
                 if (showContainer) {
@@ -54,7 +54,7 @@ class _MovieWidgetState extends State<MovieWidget> {
               },
               child: AnimatedOpacity(
                 opacity: showText ? 1.0 : 0.0,
-                duration: Duration(milliseconds: 300),
+                duration: Duration(milliseconds: 100),
                 curve: Curves.easeIn,
                 onEnd: () {
                   if (!showText) {
