@@ -1,8 +1,14 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:universal_io/io.dart';
+
 import 'package:flutter_presentation/models/movie.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 class API {
-  static Stream<Movie> getPopularMovies() async* {
+  static Stream<List<Movie>> getPopularMovies() async* {
     String movieSplit = '<td class="posterColumn">';
     String titleSplitStart = '<td class="titleColumn">';
     String titleSplitEnd = '</a>';
@@ -20,6 +26,7 @@ class API {
 
     String rawBody = response.body;
     List<String> rawMovies = rawBody.split(movieSplit);
+    List<Movie> movies = [];
 
     for (String rawMovie in rawMovies) {
       if (rawMovie.contains(titleSplitStart)) {
@@ -81,8 +88,45 @@ class API {
           rating = double.parse(ratingString.split("based")[0]);
         }
 
-        yield Movie(title, image, plot, duration, categories, year, rating);
+        movies.add(Movie(
+            title, image, plot, duration, categories.join(", "), year, rating));
+
+        yield [
+          Movie(
+              title, image, plot, duration, categories.join(", "), year, rating)
+        ];
       }
     }
+
+    if (Platform.isWindows) {
+      saveData(movies);
+    }
+  }
+
+  static Future<void> saveData(List<Movie> movies) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      File file = File(
+          '${directory.path}\\projects\\flutter_presentation\\assets\\movies.json');
+      file.writeAsString(
+          JsonEncoder().convert(movies.map((e) => e.toJson()).toList()));
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  static Stream<List<Movie>> getData(BuildContext context) async* {
+    String contents =
+        (await DefaultAssetBundle.of(context).loadString("assets/movies.json"))
+            .replaceAll('\\"', '');
+
+    List<Movie> movies = [];
+
+    List<dynamic> moviesJsons = JsonDecoder().convert(contents);
+    for (dynamic movieJson in moviesJsons) {
+      movies.add(Movie.fromJson(movieJson));
+    }
+
+    yield movies;
   }
 }

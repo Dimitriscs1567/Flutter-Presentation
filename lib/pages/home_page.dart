@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_presentation/models/movie.dart';
 import 'package:flutter_presentation/services/api.dart';
 import 'package:flutter_presentation/widgets/movie_widget.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class HomePage extends StatefulWidget {
   @override
@@ -21,10 +22,10 @@ class _HomePageState extends State<HomePage> {
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: StreamBuilder(
-          stream: API.getPopularMovies(),
+          stream: kIsWeb ? API.getData(context) : API.getPopularMovies(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              movies.add(snapshot.data as Movie);
+              movies.addAll(snapshot.data as List<Movie>);
             }
 
             if (movies.isNotEmpty) {

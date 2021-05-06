@@ -79,24 +79,59 @@ class MoviePage extends StatelessWidget {
           ),
         ),
         Padding(padding: const EdgeInsets.all(8.0)),
-        Row(
-          children: [
-            Text(
-              movie.categories,
-              style: TextStyle(
-                fontSize: small ? 15.0 : 17.0,
-                color: Colors.white,
+        !small
+            ? Row(
+                children: [
+                  Text(
+                    movie.categories,
+                    style: TextStyle(
+                      fontSize: small ? 15.0 : 17.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  _iconText(movie.year.toString(), Icons.calendar_today, small),
+                  _iconText(
+                      movie.duration ?? "Not Available", Icons.timer, small),
+                  _iconText(
+                    movie.rating != null
+                        ? movie.rating.toString()
+                        : "Not available",
+                    Icons.star,
+                    small,
+                  ),
+                ],
+              )
+            : Column(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        movie.categories,
+                        style: TextStyle(
+                          fontSize: small ? 15.0 : 17.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(padding: const EdgeInsets.all(10.0)),
+                  Row(
+                    children: [
+                      _iconText(
+                          movie.year.toString(), Icons.calendar_today, small),
+                      _iconText(movie.duration ?? "Not Available", Icons.timer,
+                          small),
+                      _iconText(
+                        movie.rating != null
+                            ? movie.rating.toString()
+                            : "Not available",
+                        Icons.star,
+                        small,
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-            _iconText(movie.year.toString(), Icons.calendar_today, small),
-            _iconText(movie.duration ?? "Not Available", Icons.timer, small),
-            _iconText(
-              movie.rating != null ? movie.rating.toString() : "Not available",
-              Icons.star,
-              small,
-            ),
-          ],
-        ),
         Padding(padding: const EdgeInsets.all(8.0)),
         Text(
           movie.plot,
@@ -135,7 +170,10 @@ class MoviePage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 26.0),
       child: Container(
-        color: small ? Colors.grey[800] : Colors.transparent,
+        decoration: BoxDecoration(
+          color: small ? Colors.grey[800] : Colors.transparent,
+          shape: BoxShape.circle,
+        ),
         child: IconButton(
           onPressed: () {
             Navigator.pop(context);
