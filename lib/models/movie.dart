@@ -18,7 +18,7 @@ class Movie {
 
   String? get duration => this._duration;
 
-  List<String> get categoryies => this._categories;
+  String get categories => this._categories.join(", ");
 
   int get year => this._year;
 

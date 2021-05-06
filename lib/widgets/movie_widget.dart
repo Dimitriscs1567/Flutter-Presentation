@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_presentation/models/movie.dart';
+import 'package:flutter_presentation/pages/movie_page.dart';
 
 class MovieWidget extends StatefulWidget {
   final Movie movie;
@@ -17,7 +18,14 @@ class _MovieWidgetState extends State<MovieWidget> {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MoviePage(movie: widget.movie),
+          ),
+        );
+      },
       onHover: (entered) {
         setState(() {
           if (entered) {
